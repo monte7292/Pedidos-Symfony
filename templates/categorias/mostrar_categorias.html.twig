@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ACategoriasController!{% endblock %}
+
+{% block body %}
+    <h1>HOLA Mundoooo</h1>
+    {% for categoria in categorias %}
+        <p><a href="{{ path('productos',{'categoria': categoria.getId()} ) }}">{{ categoria.getNombre }}</a></p>
+        {% endfor %}
+{% endblock %}

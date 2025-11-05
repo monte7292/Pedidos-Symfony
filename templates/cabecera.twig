@@ -1,0 +1,6 @@
+{# empty Twig template #}
+{% block header %}
+    <h1>Bienvenido {{ app.user.login }}</h1>
+    <a href="{{ path('categorias') }}">Categorias</a>
+    <a href="{{ path('logout') }}">Logout</a>
+{% endblock %}
