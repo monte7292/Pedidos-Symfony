@@ -3,8 +3,9 @@
 {% block title %}Hello ACategoriasController!{% endblock %}
 
 {% block body %}
-    <h1>HOLA Mundoooo</h1>
+    <h1>CATEGORIAS DE PRODUCTOS</h1>
+    
     {% for categoria in categorias %}
-        <p><a href="{{ path('productos',{'categoria': categoria.getId()} ) }}">{{ categoria.getNombre }}</a></p>
+        <p><a href="{{ path('productos', {'id': categoria.getId()}) }}">{{ categoria.getNombre() }}</a></p>
         {% endfor %}
 {% endblock %}

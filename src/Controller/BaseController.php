@@ -23,5 +23,22 @@ final class BaseController extends AbstractController
         ]);
     }
     
+    #[Route('productos/{id}', name: 'productos')]
+    public function mostrar_productos(EntityManagerInterface $doctrine, int $id): Response
+    {
+        $categoria = $doctrine ->getRepository(Categoria::class)->find($id);
+        $productos = $categoria->getProductos();
+        return $this->render('productos/mostrar_productos.html.twig', [
+                    'productos' => $productos,
+        ]);
+    }
+    
+    #[Route('{productos}/detalles}', name: 'detalles')]
+    public function mostrar_detalles(): Response
+    {
+  
+    }
+    
+    
 }
 # ESTO SERÁ UN COMENTARIO PARA EL PULL DE EJEMPLO 2
