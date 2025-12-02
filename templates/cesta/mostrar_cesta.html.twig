@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cesta de Compra{% endblock %}
+
+{% block body %}
+    
+{% include 'cabecera.html.twig' %}
+<h1>Tu Cesta de Compra</h1>
+
+{% if productos is empty %}
+    <p>Tu cesta está vacía.</p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Unidades</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set total = 0 %}
+            {% for codigo, producto in productos %}
+                {% set unidades_producto = unidades[codigo] %}
+                {% set subtotal = producto.precio * unidades_producto %}
+                {% set total = total + subtotal %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.precio | number_format(2, ',', '.') }} €</td>
+                    <td>{{ unidades_producto }}</td>
+                    <td>{{ subtotal | number_format(2, ',', '.') }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" style="text-align:right">Total:</th>
+                <th>{{ total | number_format(2, ',', '.') }} €</th>
+            </tr>
+        </tfoot>
+    </table>
+{% endif %}
+
+{% endblock %}

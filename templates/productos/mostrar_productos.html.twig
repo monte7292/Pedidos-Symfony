@@ -4,21 +4,36 @@
 
 {% block body %}
     
-    <h1>PRODUCTOS DE LA CATEGORIA</h1>
+    {% include 'cabecera.html.twig' %}
     
-    {% if productos is empty %}
-        <p>No hay productos en esta categoría.</p>
-    {% else %}
-        <ul>
-            {% for producto in productos %}
-        <li>
-            <p><a href="{{ path('detalles', {'productos':producto.getId()}) }}">{{ producto.getNombre() }}</a></p>
-            Precio: {{ producto.getPrecio() }} €<br>
-            Descripción: {{ producto.getDescripcion() }}
-        </li>
-    {% endfor %}
-        </ul>
-    {% endif %}
+<h1>PRODUCTOS DE LA CATEGORÍA</h1>
 
-    <p><a href="{{ path('categorias') }}">Volver a categorías</a></p>
+<form action="{{ path('anadir') }}" method="POST">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Unidades</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.getNombre() }}</td>
+                    <td>{{ producto.getPrecio() }} €</td>
+                    <td>{{ producto.getDescripcion() }}</td>
+                    <td>
+                        {# Cada input tiene como key el ID del producto #}
+                        <input type="number" name="unidades[{{ producto.getId() }}]" value="0" min="0">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <input type="submit" name="enviar" value="Añadir a la cesta">
+</form>
+
 {% endblock %}

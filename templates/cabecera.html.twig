@@ -1,0 +1,16 @@
+{% block header %}
+<header style="background-color:#333;color:white;padding:10px 0;text-align:center;">
+    <h2>Bienvenido a Nuestra Web</h2>
+</header>
+
+<nav style="display:flex;justify-content:center;background-color:#444;padding:10px;">
+    <a href="/categorias" style="color:white;text-decoration:none;margin:0 15px;font-weight:500;padding:8px 15px;border-radius:5px;">Categorías</a>
+    <a href="/cesta" style="color:white;text-decoration:none;margin:0 15px;font-weight:500;padding:8px 15px;border-radius:5px;">Cesta</a>
+    
+    {% if app.user %}
+        <a href="/logout" style="color:red;text-decoration:none;margin:0 15px;font-weight:500;padding:8px 15px;border-radius:5px;">Cerrar Sesión</a>
+    {% else %}
+        <a href="/login" style="color:white;text-decoration:none;margin:0 15px;font-weight:500;padding:8px 15px;border-radius:5px;">Iniciar Sesión</a>
+    {% endif %}
+</nav>
+{% endblock %}

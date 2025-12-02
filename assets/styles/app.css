@@ -14,7 +14,7 @@ a {
 }
 
 a:hover {
-    color: #2c80b4;
+    color: black;
 }
 
 /* ===== Cabeceras ===== */
@@ -137,10 +137,11 @@ p a:focus {
 /* ===== Contenedor de los botones en Grid ===== */
 p {
     display: grid;
-    gap: 20px; /* Espaciado entre los elementos */
-    margin-bottom: 25px;
-    width: 100%;
+    gap: 20px;      /* Espaciado entre los elementos */
+    margin: 0 auto 25px auto; /* Centrado horizontal + margen abajo */
+    width: 400px;   /* Ancho del contenedor */
 }
+
 
 /* ===== Enlaces como Botones en el Grid ===== */
 p a {

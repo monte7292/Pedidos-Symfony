@@ -40,4 +40,16 @@ class ProductoRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    //Transformo el array de id a un array de productos
+    public function findProductosByIds(array $productos_ids): array{
+        $em = $this->getEntityManager();
+        $productos = [];
+        foreach($productos_ids as $producto_id) {
+            $producto = $em->getRepository(Producto::class)->find($producto);
+            $productos[] = $producto;
+        }
+        
+        return $productos;
+    }
+    
 }
