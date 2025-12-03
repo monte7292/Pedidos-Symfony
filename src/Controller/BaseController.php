@@ -42,13 +42,14 @@ final class BaseController extends AbstractController
         ]);
     }
     
-    //POR TERMINAR ESTE METODO, ME FALTA AÑADIR
-    
+    //POR TERMINAR ESTE METODO, ME FALTA AÑADIR  
     #[Route('/anadir', name: 'anadir')]
     public function anadir_productos(ManagerRegistry $em, Request $request, CestaCompra $cesta): Response
     {
-        $productos_id = $request->request->get("productos_id");
-        $unidades = $request->request->get("unidades");
+        $productos_id = $request->request->all("productos_id");
+        $unidades = $request->request->all("unidades");
+        
+        
         // Obtener array de productos
         $productos = $em->getRepository(Producto::class)->findBy(['id' => $productos_id]);
         $cesta->cargar_productos($productos, $unidades);
@@ -59,7 +60,9 @@ final class BaseController extends AbstractController
         // Obtener ID de categoría del producto
         $categoria_id = $objetos_producto[0]->getCategoria()->getId();
 
-        return $this->redirectToRoute("productos", ['categoria' => $categoria_id]);
+        return $this->redirectToRoute("productos", [
+            'categoria' => $categoria_id
+        ]);
     }
     
     #[Route('/cesta', name: 'cesta')]

@@ -6,16 +6,73 @@
 
 {% include 'cabecera.html.twig' %}
 
-<h1 style="text-align:center; margin-top:30px;">CATEGORÍAS DE PRODUCTOS</h1>
+<style>
+    .categorias-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
 
-<div style="text-align:center; margin-top:20px;">
-    {% for categoria in categorias %}
-        <p>
-            <a href="{{ path('productos', { 'categoria': categoria.getId() }) }}">
+    .categorias-container h1 {
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .categorias-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px; /* Gap pequeño entre celdas */
+        justify-items: center;
+    }
+
+    .categoria-link {
+        display: block;
+        padding: 20px 10px; /* Espacio interno dentro de cada botón */
+        margin: 5px 0; /* Espacio extra vertical dentro de la celda */
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .categoria-link:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 900px) {
+        .categorias-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .categorias-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="categorias-container">
+    <h1>CATEGORÍAS DE PRODUCTOS</h1>
+
+    <div class="categorias-grid">
+        {% for categoria in categorias %}
+            <a class="categoria-link" href="{{ path('productos', { 'categoria': categoria.getId() }) }}">
                 {{ categoria.getNombre() }}
             </a>
-        </p>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
