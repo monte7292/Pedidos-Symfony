@@ -48,6 +48,35 @@
         color: white;
         font-size: 1.1em;
     }
+    .eliminar-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* espacio entre input y botón */
+    }
+
+    .unidades-input {
+        width: 50px;
+        padding: 3px 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .eliminar-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .eliminar-btn:hover {
+        background-color: #d32f2f;
+    }
+
 </style>
 
 <div class="cesta-container">
@@ -60,28 +89,45 @@
             <thead>
                 <tr>
                     <th>Producto</th>
+                    <th>Nombre Corto</th>
                     <th>Precio Unitario</th>
                     <th>Unidades</th>
                     <th>Subtotal</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
                 {% set total = 0 %}
                 {% for codigo, producto in productos %}
+                    
+                    {# Esto es un comentario en Twig #}
                     {% set unidades_producto = unidades[codigo] %}
                     {% set subtotal = producto.precio * unidades_producto %}
                     {% set total = total + subtotal %}
+                    
+                    
                     <tr>
                         <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.nombreCorto }}</td>
                         <td>{{ producto.precio | number_format(2, ',', '.') }} €</td>
                         <td>{{ unidades_producto }}</td>
                         <td>{{ subtotal | number_format(2, ',', '.') }} €</td>
+                        <td>
+                            <form action="{{ path('eliminar') }}" method="POST" class="eliminar-form">
+                                <input type="number" value="1" min="1" name="unidades" class="unidades-input"/>
+                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                <button type="submit" name="eliminar_producto" value="Eliminar" class="eliminar-btn">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
+                    
+                    
                 {% endfor %}
             </tbody>
+
             <tfoot>
                 <tr>
-                    <th colspan="3" style="text-align:right">Total:</th>
+                    <th colspan="5" style="text-align:right">Total:</th>
                     <th>{{ total | number_format(2, ',', '.') }} €</th>
                 </tr>
             </tfoot>

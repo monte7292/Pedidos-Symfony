@@ -73,4 +73,19 @@ final class BaseController extends AbstractController
             'unidades'  => $cesta->get_unidades(),
         ]);
     }
+    
+    #METODO PARA ACTUALIZAR LA CESTA
+    #[Route('/eliminar', name: 'eliminar')]
+    public function eliminar(Request $request, CestaCompra $cesta): Response
+    {
+        $producto_id = $request->request->all("productos_id");
+        $unidades = $request->request->all("unidades");
+        
+        $cesta->eliminar_producto($producto_id, $unidades);
+
+        return $this->redirectToRoute('cesta');
+    }
+
+    
+    
 }

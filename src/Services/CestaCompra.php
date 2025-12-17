@@ -37,6 +37,21 @@ class CestaCompra {
 
         $this->guardar_cesta();
     }
+    
+    // Actualizar unidades en la cesta (si llega a 0 se elimina)
+    /*public function actualizar_producto(string $codigo, int $unidad) {
+        $this->cargar_cesta();
+
+        if ($unidad <= 0) {
+            unset($this->productos[$codigo]);
+            unset($this->unidades[$codigo]);
+        } else {
+            $this->unidades[$codigo] = $unidad;
+        }
+
+        $this->guardar_cesta();
+    }*/
+
 
 
     // Cargar cesta desde sesión
@@ -71,5 +86,19 @@ class CestaCompra {
     public function get_unidades() {
         $this->cargar_cesta();
         return $this->unidades;
+    }
+    
+    //ELiminar productos
+    public function eliminar_producto($codigo_producto, $unidades) {
+        if(array_key_exists($codigo_producto, $this->productos)){
+            
+            $this-> unidades[$codigo_producto]-= $unidades;
+            
+            if($this->unidades[$codigo_producto] <= 0){
+                unset($this->unidades[$codigo_producto]);
+                unset($this->productos[$codigo_producto]);
+            }
+            $this->guardar_cesta();
+        }
     }
 }
