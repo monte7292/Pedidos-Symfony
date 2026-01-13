@@ -90,6 +90,9 @@ class CestaCompra {
     
     //ELiminar productos
     public function eliminar_producto($codigo_producto, $unidades) {
+        //Cargamos la sesion de la cesta
+        $this->cargar_cesta();
+        
         if(array_key_exists($codigo_producto, $this->productos)){
             
             $this-> unidades[$codigo_producto]-= $unidades;

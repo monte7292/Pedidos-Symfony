@@ -76,10 +76,11 @@ final class BaseController extends AbstractController
     
     #METODO PARA ACTUALIZAR LA CESTA
     #[Route('/eliminar', name: 'eliminar')]
-    public function eliminar(Request $request, CestaCompra $cesta): Response
-    {
-        $producto_id = $request->request->all("productos_id");
-        $unidades = $request->request->all("unidades");
+    public function eliminar(Request $request, CestaCompra $cesta)
+    {   
+        //Eliminamos la cantidad
+        $producto_id = $request->request->get("productos_id");
+        $unidades = $request->request->get("unidades");
         
         $cesta->eliminar_producto($producto_id, $unidades);
 

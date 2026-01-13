@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +38,17 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone = null;
+
+    /**
+     * @var Collection<int, PEedido>
+     */
+    #[ORM\OneToMany(targetEntity: Pedido::class, mappedBy: 'usuario')]
+    private Collection $pedidos;
+
+    public function __construct()
+    {
+        $this->pedidos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,6 +151,36 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PEedido>
+     */
+    public function getPEedidos(): Collection
+    {
+        return $this->pEedidos;
+    }
+
+    public function addPEedido(PEedido $pEedido): static
+    {
+        if (!$this->pEedidos->contains($pEedido)) {
+            $this->pEedidos->add($pEedido);
+            $pEedido->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removePEedido(PEedido $pEedido): static
+    {
+        if ($this->pEedidos->removeElement($pEedido)) {
+            // set the owning side to null (unless already changed)
+            if ($pEedido->getUsuario() === $this) {
+                $pEedido->setUsuario(null);
+            }
+        }
 
         return $this;
     }
