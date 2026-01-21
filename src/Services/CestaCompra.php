@@ -88,6 +88,16 @@ class CestaCompra {
         return $this->unidades;
     }
     
+    public function calcular_coste()
+    {
+        $resultado = 0;
+        foreach ($this->productos as $codigo_producto => $producto) {
+            $resultado += $producto->getPrecio() * $this->unidades[$codigo_producto];
+        }
+        return $resultado;
+    }
+
+    
     //ELiminar productos
     public function eliminar_producto($codigo_producto, $unidades) {
         //Cargamos la sesion de la cesta

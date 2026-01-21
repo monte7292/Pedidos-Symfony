@@ -6,11 +6,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Email;
+use Symfony\Component\Mailer\Addres;
+use Symfony\Component\Validator\Constraints\DateTime;
+
 #Entidades
 use App\Entity\Categoria;
 use App\Entity\Producto;
+use App\Entity\Pedido;
+use App\Entity\PedidoProducto;
 use App\Services\CestaCompra;
 
 #[IsGranted('ROLE_USER')]
@@ -87,6 +95,55 @@ final class BaseController extends AbstractController
         return $this->redirectToRoute('cesta');
     }
 
-    
-    
+    //Cambiamos el Manager por el Entity ya que no nos dejaría utilizar el persist
+    #[Route('/pedido', name: 'pedido')]
+    public function pedido(CestaCompra $cesta, EntityManagerInterface $em)
+    {   
+        //Iniciamos las variables
+        $error = 0;
+        $productos = $cesta->get_productos();
+        $unidades  = $cesta->get_unidades();
+        
+        if(count($productos) == 0){
+            //Valor 1 cuando no hay productos en la cesta
+            $error = 1;
+        } else {
+            //Generamos un nuevo objeto Pedido con sus Setters
+            $pedido = new Pedido();
+            $pedido->setCoste($cesta->calcular_coste());
+            //Hacemos un objeto nuevo para poder conseguir la hora actual
+            $pedido->setFecha(new \DateTime());
+            $pedido->setUsuario($this->getUser());
+            //Permance en espera con ese pedido
+            $em->persist($pedido);
+            
+
+            //Hacemos un for para asignar los productos
+            foreach ($productos as $codigo_producto => $productoCesta) {
+                $pedidoProdudcto = new PedidoProducto();
+                $pedidoProdudcto->setPedido($pedido);
+                
+                $producto = $em->getRepository(Producto::class)->findBy(['id' => $productoCesta -> getId()])[0];
+                        
+                $pedidoProdudcto->setProducto($producto);
+                //Asignamos el codigo producto a las unidades
+                $pedidoProdudcto->setUnidades($unidades[$codigo_producto]);
+                //Generamos el persist
+                $em->persist($pedidoProdudcto);
+            }
+            try{
+                //El flush hace que se guarde en la base
+                //Y genera una sesión.
+                $em->flush();
+            } catch (Exception $ex) {
+                //Este error será porque falla el acceso a la BD
+                $error = 2;
+            }
+        }
+        
+        return $this->render('pedido/pedido.html.twig', [
+            'pedido_id' => $pedido->getId(),
+            'error' => $error
+        ]);
+    } 
 }

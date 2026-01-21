@@ -84,6 +84,20 @@
 
     {% if productos is empty %}
         <p>Tu cesta está vacíaa.</p>
+        <form action="{{ path('pedido') }}" method="GET" style="margin-top:20px;">
+                        <button type="submit"
+                                style="
+                                    padding: 12px 25px;
+                                    background-color: #2196F3;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 8px;
+                                    font-size: 16px;
+                                    cursor: pointer;
+                                ">
+                            Realizar pedido
+                        </button>
+                    </form>
     {% else %}
         <table>
             <thead>
@@ -123,6 +137,23 @@
                     
                     
                 {% endfor %}
+                {% if productos is not empty %}
+                    <form action="{{ path('pedido') }}" method="GET" style="margin-top:20px;">
+                        <button type="submit"
+                                style="
+                                    padding: 12px 25px;
+                                    background-color: #2196F3;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 8px;
+                                    font-size: 16px;
+                                    cursor: pointer;
+                                ">
+                            Realizar pedido
+                        </button>
+                    </form>
+                {% endif %}
+
             </tbody>
 
             <tfoot>
