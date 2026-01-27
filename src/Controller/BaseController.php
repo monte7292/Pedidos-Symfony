@@ -101,6 +101,7 @@ final class BaseController extends AbstractController
     {   
         //Iniciamos las variables
         $error = 0;
+        $pedido = null;
         $productos = $cesta->get_productos();
         $unidades  = $cesta->get_unidades();
         
@@ -142,8 +143,9 @@ final class BaseController extends AbstractController
         }
         
         return $this->render('pedido/pedido.html.twig', [
-            'pedido_id' => $pedido->getId(),
+            'pedido_id' => $pedido ? $pedido->getId() : null,
             'error' => $error
         ]);
+
     } 
 }
