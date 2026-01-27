@@ -1,5 +1,0 @@
-<?php
-echo "Cambio 1 rama"
-echo "Cambio 2 rama"
-echo "Cambio 3 rama"
-?>
