@@ -1,0 +1,107 @@
+{# templates/correo.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; color: #1a1a1a; margin: 0; padding: 20px; }
+        .card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 24px; padding: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
+        
+        .header { text-align: left; margin-bottom: 30px; }
+        .welcome { color: #00b894; font-size: 28px; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        
+        .items-container { margin: 30px 0; }
+
+        /* ESTRUCTURA UNIFICADA PARA ITEMS Y TOTAL */
+        .row-layout { 
+            display: table; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+
+        .col-left { 
+            display: table-cell; 
+            vertical-align: middle; 
+            text-align: left; 
+        }
+
+        .col-right { 
+            display: table-cell; 
+            vertical-align: middle; 
+            text-align: right; 
+            width: 130px; /* Misma medida para items y total */
+        }
+
+        /* ESTILOS DE ITEM */
+        .item-card { 
+            background: #f8f9fa; 
+            border-radius: 18px; 
+            padding: 20px; 
+            margin-bottom: 12px; 
+            border: 1px solid #f1f3f5;
+        }
+        .item-name { font-weight: 700; font-size: 16px; color: #2d3436; display: block; }
+        .item-desc { font-size: 13px; color: #636e72; line-height: 1.3; margin: 4px 0; padding-right: 10px; }
+        .item-badge { background: #edeff2; color: #7f8c8d; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
+        
+        .item-qty { background: #6c5ce7; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        .item-subtotal { display: block; font-size: 18px; font-weight: 800; color: #2d3436; }
+        .item-unit-price { font-size: 11px; color: #a2a2a2; display: block; }
+
+        /* CAJA TOTAL ACTUALIZADA */
+        .total-box { 
+            background: #2d3436; 
+            border-radius: 20px; 
+            padding: 25px 20px; 
+            margin-top: 25px; 
+            color: white; 
+        }
+        .total-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; font-weight: 600; }
+        .total-tax-info { font-size: 11px; opacity: 0.5; }
+        .total-amount { font-size: 30px; font-weight: 800; color: #00b894; display: block; }
+        
+        .footer { text-align: center; margin-top: 30px; color: #b2bec3; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1 class="welcome">¡Pedido confirmado!</h1>
+            <p style="color: #636e72;">Hola <b>{{ app.user.login }}</b>, gracias por tu compra.</p>
+        </div>
+
+        <div class="items-container">
+            {% for codigo, producto in productos %}
+            <div class="item-card row-layout">
+                <div class="col-left">
+                    <span class="item-name">{{ producto.nombreCorto() }}</span>
+                    <div class="item-desc">{{ producto.descripcion() }}</div>
+                    <span class="item-badge">REF: {{ codigo }}</span>
+                </div>
+                
+                <div class="col-right">
+                    <span class="item-qty">x{{ unidades[codigo] }}</span>
+                    <span class="item-subtotal">{{ (producto.precio() * unidades[codigo])|number_format(2, ',', '.') }}€</span>
+                    <span class="item-unit-price">{{ producto.precio()|number_format(2, ',', '.') }}€/ud</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="total-box row-layout">
+            <div class="col-left">
+                <div class="total-label">Total pagado</div>
+                <div class="total-tax-info">Impuestos y gastos de envío incluidos</div>
+            </div>
+            <div class="col-right">
+                <span class="total-amount">{{ coste|number_format(2, ',', '.') }}€</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            Pedido ID: #{{ pedido_id }} | {{ "now"|date("Y") }} Tu Tienda
+        </div>
+    </div>
+</body>
+</html>

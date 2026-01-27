@@ -13,11 +13,14 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Email;
 use Symfony\Component\Mailer\Addres;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 
 #Entidades
 use App\Entity\Categoria;
 use App\Entity\Producto;
 use App\Entity\Pedido;
+use App\Entity\Usuario;
 use App\Entity\PedidoProducto;
 use App\Services\CestaCompra;
 
@@ -97,13 +100,15 @@ final class BaseController extends AbstractController
 
     //Cambiamos el Manager por el Entity ya que no nos dejaría utilizar el persist
     #[Route('/pedido', name: 'pedido')]
-    public function pedido(CestaCompra $cesta, EntityManagerInterface $em)
+    public function pedido(CestaCompra $cesta, EntityManagerInterface $em, MailerInterface $mailer)
     {   
         //Iniciamos las variables
         $error = 0;
-        $pedido = null;
         $productos = $cesta->get_productos();
         $unidades  = $cesta->get_unidades();
+        
+        // Puede no existir pedido (cesta vacía), evitamos llamar a getId() sobre null
+        $pedido = $pedido ?? null;
         
         if(count($productos) == 0){
             //Valor 1 cuando no hay productos en la cesta
@@ -140,12 +145,37 @@ final class BaseController extends AbstractController
                 //Este error será porque falla el acceso a la BD
                 $error = 2;
             }
+            
+            
+            if(!$error){
+                
+                //Obtenemos el usuario desde la sesión
+                $usuarioId = $this->getUser()->getId();        
+                $usuario = $em ->getRepository(Usuario::class)->find($usuarioId);
+                //AQuí en vez de poner el usuario->getemail poner el correo con 'asdds@gmail.com'
+                $destinationEmail = $usuario->getEmail();
+                
+                $email = (new TemplatedEmail())
+                    ->from(new Address('amontor1507@g.educaand.es', 'Tienda Online'))
+                    ->to(new Address($destinationEmail))
+                    ->subject('Confirmación de pedido #' . $pedido->getId())
+                    ->htmlTemplate('correo.html.twig')
+                    ->context([
+                        'pedido_id' => $pedido->getId(),
+                        'productos' => $cesta->get_productos(),
+                        'unidades'  => $cesta->get_unidades(),
+                        'coste'     => $cesta->calcular_coste(),
+                    ]);
+
+                $mailer->send($email);
+            }
+            
         }
+        
         
         return $this->render('pedido/pedido.html.twig', [
             'pedido_id' => $pedido ? $pedido->getId() : null,
             'error' => $error
         ]);
-
     } 
 }
