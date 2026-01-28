@@ -100,17 +100,18 @@ class CestaCompra {
     
     //ELiminar productos
     public function eliminar_producto($codigo_producto, $unidades) {
-        //Cargamos la sesion de la cesta
         $this->cargar_cesta();
-        
+
         if(array_key_exists($codigo_producto, $this->productos)){
-            
-            $this-> unidades[$codigo_producto]-= $unidades;
-            
+            // Restamos las unidades
+            $this->unidades[$codigo_producto] -= $unidades;
+
+            // Si las unidades son 0 o menos, borramos el rastro del producto
             if($this->unidades[$codigo_producto] <= 0){
                 unset($this->unidades[$codigo_producto]);
                 unset($this->productos[$codigo_producto]);
             }
+
             $this->guardar_cesta();
         }
     }

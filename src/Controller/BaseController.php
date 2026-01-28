@@ -86,18 +86,20 @@ final class BaseController extends AbstractController
     }
     
     #METODO PARA ACTUALIZAR LA CESTA
-    #[Route('/eliminar', name: 'eliminar')]
-    public function eliminar(Request $request, CestaCompra $cesta)
-    {   
-        //Eliminamos la cantidad
-        $producto_id = $request->request->get("productos_id");
-        $unidades = $request->request->get("unidades");
-        
-        $cesta->eliminar_producto($producto_id, $unidades);
+    #[Route('/eliminar', name: 'eliminar', methods: ['POST'])]
+    public function eliminar(Request $request, CestaCompra $cestaCompra)
+    {
+        // Capturamos el código que ahora enviamos correctamente desde Twig
+        $codigo = $request->request->get('codigo_producto');
+        $unidades = $request->request->get('unidades');
+
+        if ($codigo) {
+            $cestaCompra->eliminar_producto($codigo, $unidades);
+        }
 
         return $this->redirectToRoute('cesta');
     }
-
+    
     //Cambiamos el Manager por el Entity ya que no nos dejaría utilizar el persist
     #[Route('/pedido', name: 'pedido')]
     public function pedido(CestaCompra $cesta, EntityManagerInterface $em, MailerInterface $mailer)
@@ -147,8 +149,7 @@ final class BaseController extends AbstractController
             }
             
             
-            if(!$error){
-                
+            if(!$error){               
                 //Obtenemos el usuario desde la sesión
                 $usuarioId = $this->getUser()->getId();        
                 $usuario = $em ->getRepository(Usuario::class)->find($usuarioId);
@@ -156,6 +157,8 @@ final class BaseController extends AbstractController
                 $destinationEmail = $usuario->getEmail();
                 
                 $email = (new TemplatedEmail())
+                    //AL hacer el Nuevo objeto lo primero será el correo y lo segundo es el
+                    //asunto basicamente lo que saldrá en la bandeja de entrada    
                     ->from(new Address('amontor1507@g.educaand.es', 'Tienda Online'))
                     ->to(new Address($destinationEmail))
                     ->subject('Confirmación de pedido #' . $pedido->getId())
@@ -166,10 +169,8 @@ final class BaseController extends AbstractController
                         'unidades'  => $cesta->get_unidades(),
                         'coste'     => $cesta->calcular_coste(),
                     ]);
-
                 $mailer->send($email);
-            }
-            
+            }           
         }
         
         
