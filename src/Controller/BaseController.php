@@ -178,5 +178,24 @@ final class BaseController extends AbstractController
             'pedido_id' => $pedido ? $pedido->getId() : null,
             'error' => $error
         ]);
-    } 
+    }
+    
+   #[Route('/historial', name: 'historial')]
+    public function historial(EntityManagerInterface $em): Response
+    {
+        // Obtenemos al usuario actual
+        $usuario = $this->getUser();
+
+        // Pillamos los pedidos del usuario directamente
+        $pedidos = $em->getRepository(Pedido::class)->findBy(
+            ['usuario' => $usuario],
+            ['id' => 'DESC'] // Ordenar por ID
+        );
+
+        // Pasamos los objetos Pedido directamente al Twig.
+        return $this->render('pedido/historial.html.twig', [
+            'pedidos' => $pedidos
+        ]);
+    }
+    
 }
