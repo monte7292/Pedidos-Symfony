@@ -2,18 +2,18 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Categoria;
+use App\Entity\Usuario;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 #[IsGranted('ROLE_ADMIN')]
-class CategoriaCrudController extends AbstractCrudController
+class UsuarioCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Categoria::class;
+        return Usuario::class;
     }
 
     /*

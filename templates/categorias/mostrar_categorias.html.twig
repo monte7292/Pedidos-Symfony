@@ -85,11 +85,6 @@
     <div class="categorias-grid">
         {% for categoria in categorias %}
             <a class="categoria-link" href="{{ path('productos', { 'categoria': categoria.getId() }) }}">
-                
-                <div class="categoria-image">
-                 
-                </div>
-
                 <div class="categoria-name">
                     {{ categoria.getNombre() }}
                 </div>

@@ -2,18 +2,19 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Categoria;
+use App\Entity\Pedido;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 
 #[IsGranted('ROLE_ADMIN')]
-class CategoriaCrudController extends AbstractCrudController
+class PedidoCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Categoria::class;
+        return Pedido::class;
     }
 
     /*
@@ -26,4 +27,10 @@ class CategoriaCrudController extends AbstractCrudController
         ];
     }
     */
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('fecha')
+            ->add('coste');
+    }
 }

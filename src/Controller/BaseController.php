@@ -27,6 +27,12 @@ use App\Services\CestaCompra;
 #[IsGranted('ROLE_USER')]
 final class BaseController extends AbstractController
 {
+    #[Route('/acceso-denegado', name: 'access_denied')]
+    public function accessDenied(): Response
+    {
+        return $this->render('security/access_denied.html.twig');
+    }
+    
     #[Route('/categorias', name: 'categorias')]
     public function mostrar_categorias(ManagerRegistry $doctrine): Response
     {

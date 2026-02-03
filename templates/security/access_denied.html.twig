@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acceso Restringido{% endblock %}
+
+{% block body %}
+
+{% include 'cabecera.html.twig' %}
+
+<style>
+    :root {
+        --primary-color: #6366f1; /* Indigo moderno */
+        --error-color: #ef4444;
+        --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    body {
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .restricted-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .restricted-card {
+        max-width: 450px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px); /* Efecto cristal */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 50px 40px;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .restricted-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .shield-icon {
+        width: 80px;
+        height: 80px;
+        background: #fee2e2;
+        color: var(--error-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 25px;
+        font-size: 32px;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    h1 {
+        color: #1e293b;
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        letter-spacing: -0.5px;
+    }
+
+    p {
+        color: #64748b;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 35px;
+    }
+
+    .user-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        padding: 4px 12px;
+        border-radius: 20px;
+        color: #475569;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-modern {
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-size: 15px;
+    }
+
+    .btn-main {
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-main:hover {
+        background: #4f46e5;
+        box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-outline:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #1e293b;
+    }
+</style>
+
+<div class="restricted-wrapper">
+    <div class="restricted-card">
+        <div class="shield-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 0.5c.667 0 1.333.333 2 1 1.333 1.333 2 3.333 2 6s-.667 4.667-2 6c-.667.667-1.333 1-2 1s-1.333-.333-2-1c-1.333-1.333-2-3.333-2-6s.667-4.667 2-6c.667-.667 1.333-1 2-1z"/>
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            </svg>
+        </div>
+
+        {% if app.user %}
+            <span class="user-badge">@{{ app.user.userIdentifier }}</span>
+        {% endif %}
+        
+        <h1>Área Limitada</h1>
+        <p>Tu cuenta actual no tiene los privilegios necesarios para acceder a este recurso. Por favor, vuelve al panel principal.</p>
+
+        <div class="btn-container">
+            <a href="{{ path('categorias') }}" class="btn-modern btn-main">Ir al Inicio</a>
+            
+            {% if not app.user %}
+                <a href="{{ path('login') }}" class="btn-modern btn-outline">Identificarse</a>
+            {% else %}
+                <a href="{{ path('logout') }}" class="btn-modern btn-outline">Cerrar sesión</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
