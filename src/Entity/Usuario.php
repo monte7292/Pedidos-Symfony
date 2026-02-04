@@ -33,6 +33,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    //Serializar y hashear contraseña, para que no permanezca en memoria
+    private ?string $plainPassword = null;
+    
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
@@ -107,12 +110,22 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    
+    public function getPlainPassword(){
+       $this->plainPassword = $this->getPassword();
+       return $this->plainPassword;
+    }
+
+    
+    //Lo mete antes
     public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
+    
+    
 
     /**
      * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
@@ -129,6 +142,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+        $this->plainPassword = null;
     }
 
     public function getEmail(): ?string
@@ -184,4 +198,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    
+    
+    
+
+  
 }

@@ -61,6 +61,7 @@ final class BaseController extends AbstractController
     
     //POR TERMINAR ESTE METODO, ME FALTA AÑADIR  
     #[Route('/anadir', name: 'anadir')]
+    //Esto lo que hace es llamar al twig del mostrar producto y en el metodo $POST de anadir
     public function anadir_productos(ManagerRegistry $em, Request $request, CestaCompra $cesta): Response
     {
         $productos_id = $request->request->all("productos_id");
@@ -85,9 +86,15 @@ final class BaseController extends AbstractController
     #[Route('/cesta', name: 'cesta')]
     public function cesta(CestaCompra $cesta): Response
     {
+        $productos = $cesta->get_productos();
+
+        // Creamos la variable booleana
+        $estaVacia = empty($productos);
+
         return $this->render('cesta/mostrar_cesta.html.twig', [
-            'productos' => $cesta->get_productos(),
-            'unidades'  => $cesta->get_unidades(),
+            'productos'  => $productos,
+            'unidades'   => $cesta->get_unidades(),
+            'estaVacia'  => $estaVacia, // Pasamos el booleano
         ]);
     }
     

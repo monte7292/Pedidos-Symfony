@@ -82,22 +82,23 @@
 <div class="cesta-container">
     <h1>Tu Cesta de Compra</h1>
 
-    {% if productos is empty %}
-        <p>Tu cesta está vacíaa.</p>
+    {% if estaVacia %}
+        <p>Tu cesta está vacía.</p>
+
         <form action="{{ path('pedido') }}" method="GET" style="margin-top:20px;">
-                        <button type="submit"
-                                style="
-                                    padding: 12px 25px;
-                                    background-color: #2196F3;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 8px;
-                                    font-size: 16px;
-                                    cursor: pointer;
-                                ">
-                            Realizar pedido
-                        </button>
-                    </form>
+            <button type="submit"
+                    style="
+                        padding: 12px 25px;
+                        background-color: #2196F3;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        cursor: pointer;
+                    ">
+                Realizar pedido
+            </button>
+        </form>
     {% else %}
         <table>
             <thead>
