@@ -36,8 +36,11 @@ COPY ./config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 WORKDIR /var/www/html/
 
 # Ejecutamos los comandos necesarios para instalar las dependencias de PHP y ejecutar nuestro proyecto
-RUN curl -sS https://getcomposer.org/installer | php \
-    && php composer.phar install \
+# Instalar composer de forma global
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Ejecutar la instalación
+RUN composer install --no-interaction --optimize-autoloader \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 777 /var/www/html/var
     
