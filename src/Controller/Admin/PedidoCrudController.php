@@ -30,6 +30,7 @@ class PedidoCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add('code')
             ->add('fecha')
             ->add('coste');
     }
